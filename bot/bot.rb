@@ -15,24 +15,21 @@ Rubotnik::Autoloader.load('bot')
 
 # Generates a location prompt for quick_replies
 LOCATION_PROMPT = UI::QuickReplies.location
+LOCATIONS = [['Rio de Janeiro', 'RIO'], ['São Paulo', 'SP']]
 
 ####################### HANDLE INCOMING MESSAGES ##############################
 
 Rubotnik.route :message do
   # Will work for all variations of these three greetings
 
-  bind 'I', 'travel', all: true, to: :start_conversation, reply_with: {
+  bind 'I', 'travel', all: true, to: :start_travel, reply_with: {
     text: 'Where are you going?',
-    quick_replies: [['Rio!', 'RIO'], ['São Paulo', 'SP']]
-    # second item in nested array will be the contents of message.quick_reply,
-    # once the user makes a selection. Quick reply text in ALL CAPS will be
-    # used as default values of payloads if you pass strings instead of arrays
-    # (e.g. quick_replies: ['Yes', 'No'], payloads "YES" and "NO" are inferred)
+    quick_replies: LOCATIONS
   }
 
-  bind 'hi', 'hello', 'bonjour' do
-    say 'Hello from your new bot!'
-  end
+  bind 'search', 'star', 'wars', to: :star_wars_search, reply_with: {
+    text: 'Which character you\'re looking for?',
+  }
 
   bind 'which', 'best', 'bootcamp' do
     say 'Le Wagon, for sure!'
