@@ -66,7 +66,7 @@ module Commands
   def star_wars_search
     say 'Give me a second...'
     message.typing_on
-    response = HTTParty.get('https://swapi.co/api/people/?search=' + message.text)
+    response = HTTParty.get(ENV['API_BASE_URL'])
     say response.to_s
     message.typing_off
     stop_thread

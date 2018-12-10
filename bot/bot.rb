@@ -16,6 +16,7 @@ Rubotnik::Autoloader.load('bot')
 # Generates a location prompt for quick_replies
 LOCATION_PROMPT = UI::QuickReplies.location
 LOCATIONS = [['Rio de Janeiro', 'RIO'], ['São Paulo', 'SP']]
+SIZES = [['Fits ....', 'CAR'], ['Fits smth', 'POCKET']]
 
 ####################### HANDLE INCOMING MESSAGES ##############################
 
@@ -58,7 +59,7 @@ Rubotnik.route :message do
    # are present in a message (will trigger with each of them by default)
    bind 'what', 'my', 'name', all: true do
      info = get_user_info(:first_name) # helper to get fields from Graph API
-     say info[:first_name]
+     say get_user_info.to_s
    end
 
    # Look for example of an API call with HTTParty in commands/location.rb
