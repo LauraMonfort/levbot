@@ -15,30 +15,67 @@ Rubotnik::Autoloader.load('bot')
 
 # Generates a location prompt for quick_replies
 LOCATION_PROMPT = UI::QuickReplies.location
-LOCATIONS = [['Rio de Janeiro', 'RIO'], ['São Paulo', 'SP']]
-SIZES = [['Fits ....', 'CAR'], ['Fits smth', 'POCKET']]
+LOCATIONS = [['Rio de Janeiro', 'Rio de Janeiro, Brazil'], ['São Paulo', 'São Paulo, Brazil']]
+DATES = [['Today', 'TODAY'], ['Tomorrow', 'TOMORROW']]
+SIMPLE_CONFIRMATIONS = [['Yes', 'Y'], ['No', 'N']]
+SIZES = [['Fit in pocket', 'POCKET'], ['Fit in a car', 'CAR'], ['Fit in a bag', 'BAG'], ['Fit in a big car', 'BIGCAR'], ['Fit in a van', 'VAN']]
+REQUESTS_CONFIRMATIONS = [['Delete', 'DELETE'], ['Update', 'UPDATE'], ['Publish', 'PUBLISH']]
+REQUESTS_UPDATES = [['Date', 'DATE'], ['Location', 'LOCATION'], ['Picture', 'PICTURE'],  ['Departure city', 'CITY'], ['Size', 'SIZE']]
+# SIZES = [['Fits ....', 'CAR'], ['Fits smth', 'POCKET']]
+USERS = {}
+
+
+INDEX_BASE_URL = 'https://levaparamim-lauramonfort.herokuapp.com/requests'
 
 ####################### HANDLE INCOMING MESSAGES ##############################
 
 Rubotnik.route :message do
   # Will work for all variations of these three greetings
 
-  bind 'I', 'travel', all: true, to: :start_travel, reply_with: {
-    text: 'Where are you going?',
-    quick_replies: LOCATIONS
+  bind 'search', 'looking', to: :start_conversation, reply_with: {
+    text: "Welcome, #{get_user_info(:first_name)[:first_name]}! What do you want to do exactly?",
+    quick_replies: [['Deliver something', 'BRINGER'], ['Request delivery', 'SENDER']]
+    # second item in nested array will be the contents of message.quick_reply,
+     # once the user makes a selection. Quick reply text in ALL CAPS will be
+    # used as default values of payloads if you pass strings instead of arrays
+    # (e.g. quick_replies: ['Yes', 'No'], payloads "YES" and "NO" are inferred)
   }
 
-  bind 'search', 'star', 'wars', to: :star_wars_search, reply_with: {
-    text: 'Which character you\'re looking for?',
-  }
+ #  bind 'Deliver something', all: true, to: :bringer_request, reply_with: {
+ #   text: "Nice! Where can you meet the sender",
+ #   quick_replies: [['São Paulo', 'SP'], ['Rio de Janeiro', 'RJ']]
+ # }
 
-  bind 'which', 'best', 'bootcamp' do
-    say 'Le Wagon, for sure!'
-  end
+ #  bind 'Deliver request', all: true, to: :sender_request, reply_with: {
+ #   text: "Nice! Where can you meet the sender",
+ #   quick_replies: [['São Paulo', 'SP'], ['Rio de Janeiro', 'RJ']]
+ # }
 
-  bind 'are', 'you', 'excited', 'for', 'demoday', all: true do # are you excited for demoday?
-    say "Yes! Can't wait to see all the projects!"
-  end
+ #  bind 'São Paulo', all: true, to: :sender_request_date, reply_with: {
+ #   text: "Nice! When are you planning to travel",
+ #   quick_replies: [['Today', 'TODAY'], ['Tomorrow', 'TOMORROW']]
+ # }
+
+ #  bind 'Rio de Janeiro', all: true, to: :sender_request_date, reply_with: {
+ #   text: "Nice! When are you planning to travel",
+ #   quick_replies: [['Today', 'TODAY'], ['Tomorrow', 'TOMORROW']]
+ # }
+  # bind 'I', 'travel', all: true, to: :start_travel, reply_with: {
+  #   text: 'Where are you going?',
+  #   quick_replies: LOCATIONS
+  # }
+
+  # bind 'search', 'star', 'wars', to: :star_wars_search, reply_with: {
+  #   text: 'Which character you\'re looking for?',
+  # }
+
+  # bind 'which', 'best', 'bootcamp' do
+  #   say 'Le Wagon, for sure!'
+  # end
+
+  # bind 'are', 'you', 'excited', 'for', 'demoday', all: true do # are you excited for demoday?
+  #   say "Yes! Can't wait to see all the projects!"
+  # end
 
   # Start a thread (and provide an opening message with optional quick replies).
   # You have to define method named as a symbol inside a Command module
@@ -46,14 +83,14 @@ Rubotnik.route :message do
   # commands/commands.rb already has this start_conversation method
   # defined as an example.
 
-  bind 'how', 'do', 'you', all: true, to: :start_conversation, reply_with: {
-     text: "I'm doing fine! You?",
-     quick_replies: [['Good!', 'OK'], ['Not so well', 'NOT_OK']]
+  # bind 'how', 'do', 'you', all: true, to: :start_conversation, reply_with: {
+  #    text: "I'm doing fine! You?",
+  #    quick_replies: [['Good!', 'OK'], ['Not so well', 'NOT_OK']]
      # second item in nested array will be the contents of message.quick_reply,
      # once the user makes a selection. Quick reply text in ALL CAPS will be
      # used as default values of payloads if you pass strings instead of arrays
      # (e.g. quick_replies: ['Yes', 'No'], payloads "YES" and "NO" are inferred)
-   }
+   # }
 
    # Use 'all' flag if you want to trigger a command only if all words
    # are present in a message (will trigger with each of them by default)
